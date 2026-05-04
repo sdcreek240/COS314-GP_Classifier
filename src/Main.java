@@ -10,10 +10,15 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter seed: ");
         long seed = sc.nextLong();
-        String path = "../data/";
+
+        String trainPath = "data/Breast_train.csv";
+        String testPath = "data/Breast_test.csv";
 
         Random rng     = new Random(seed);
-        Dataset dataset = new Dataset(DataLoader.load(path), rng);
+
+        List<Instance> trainData = DataLoader.load(trainPath);
+        List<Instance> testData  = DataLoader.load(testPath);
+        Dataset dataset = new Dataset(trainData, testData);
 
         // Wire up and run — swap parameters for DT variant
         GPEngine engine = new GPEngine(

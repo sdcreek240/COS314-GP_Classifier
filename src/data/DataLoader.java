@@ -11,7 +11,11 @@ public class DataLoader {
         BufferedReader br = new BufferedReader(new FileReader(fp));
         String line;
 
+        br.readLine();
+
         while ((line=br.readLine()) != null) {
+
+            if (line.trim().isEmpty()) continue;
 
             String[] parts = line.split(",");
             double[] features = new double[parts.length-1];
@@ -19,9 +23,10 @@ public class DataLoader {
             for (int i=0; i<features.length; i++){
 
                 features[i] = Double.parseDouble(parts[i].trim());
-                int label = (int) Double.parseDouble(parts[parts.length-1].trim());
-                instances.add(new Instance(features, label));
             }//END_i
+
+            int label = (int) Double.parseDouble(parts[parts.length-1].trim());
+            instances.add(new Instance(features, label));
         }//END_while
 
         br.close();
