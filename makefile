@@ -5,8 +5,7 @@ OUT = out
 MAIN = Main
 
 all:
-	mkdir -p $(OUT)
-	$(JAVAC) -d $(OUT) $(SRC)/*.java
+	$(JAVAC) -d $(OUT) $(SRC)/*.java $(SRC)/data/*.java $(SRC)/evaluation/*.java $(SRC)/gp/*.java $(SRC)/tree/*.java 
 
 run:
 	$(JAVA) -cp $(OUT) $(MAIN)

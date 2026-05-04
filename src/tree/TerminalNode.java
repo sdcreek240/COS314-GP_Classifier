@@ -1,6 +1,6 @@
 package tree;
 
-public class TerminalNode {
+public class TerminalNode extends Node {
 
     private final boolean isVariable;
     private final int featureIndex;   //when isVariable===true

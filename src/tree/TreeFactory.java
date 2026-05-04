@@ -14,7 +14,7 @@ public class TreeFactory {
         this.rng = rng;
     }//constr
 
-    public Tree build(int maxDapth, boolean userFull){
+    public Tree build(int maxDepth, boolean userFull){
         Node root = userFull? full(1, maxDepth) : grow(1, maxDepth);
         return new Tree(root, maxDepth);
     }//END_build
@@ -22,7 +22,7 @@ public class TreeFactory {
     private Node full(int currDepth, int maxDepth){
 
         if (currDepth==maxDepth) return randomTerminal();
-        return new FunctionNode(randomOp(), full(currentDepth+1, maxDepth), full(currentDepth+1, maxDepth));
+        return new FunctionNode(randomOp(), full(currDepth+1, maxDepth), full(currDepth+1, maxDepth));
     }//END_full
 
     private Node grow(int currDepth, int maxDepth){
@@ -30,11 +30,11 @@ public class TreeFactory {
         if (currDepth==maxDepth) return randomTerminal();
         if (rng.nextBoolean()) return randomTerminal();
 
-        return new FunctionNode(randomOp(), grow(currDepth+1, maxDepth), grow(currentDepth+1, maxDepth));
+        return new FunctionNode(randomOp(), grow(currDepth+1, maxDepth), grow(currDepth+1, maxDepth));
     }//END_grow
 
     private FunctionNode.Op randomOp() {
-        FunctionNode.Op[] ops = FunctionNode.Op.value();
+        FunctionNode.Op[] ops = FunctionNode.Op.values();
         return ops[rng.nextInt(ops.length)];
     }
 

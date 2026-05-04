@@ -22,7 +22,7 @@ public class Tree {
 
     public Node getRoot()              { return root; }
     public void setRoot(Node root)     { this.root = root; }
-    public int getDepth()           { return this.Depth; }
+    public int getDepth()           { return this.depth; }
     public double getFitness()         { return fitness; }
     public void setFitness(double f)   { this.fitness = f; }
 

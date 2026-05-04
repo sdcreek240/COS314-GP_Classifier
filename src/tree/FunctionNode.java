@@ -1,6 +1,6 @@
 package tree;
 
-public class FunctionNode {
+public class FunctionNode extends Node {
 
     public enum Op { ADD, SUB, MUL, DIV }
 

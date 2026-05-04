@@ -5,13 +5,13 @@ import java.io.*;
 
 public class DataLoader {
 
-    public static List<Instance> load(String fp) throws IOExeption {
+    public static List<Instance> load(String fp) throws IOException {
 
         List<Instance> instances = new ArrayList<>();
-        BufferReader br = new BufferReader(new FileReader(fp));
+        BufferedReader br = new BufferedReader(new FileReader(fp));
         String line;
 
-        while (line=br.readLine() != null) {
+        while ((line=br.readLine()) != null) {
 
             String[] parts = line.split(",");
             double[] features = new double[parts.length-1];
@@ -19,7 +19,7 @@ public class DataLoader {
             for (int i=0; i<features.length; i++){
 
                 features[i] = Double.parseDouble(parts[i].trim());
-                int label = (int) Double.parseDouble(parts[parts.length-1].trim);
+                int label = (int) Double.parseDouble(parts[parts.length-1].trim());
                 instances.add(new Instance(features, label));
             }//END_i
         }//END_while
