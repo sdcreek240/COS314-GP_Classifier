@@ -1,0 +1,6 @@
+# Compiled Java
+*.class
+out/
+
+# JAR files
+*.jar
