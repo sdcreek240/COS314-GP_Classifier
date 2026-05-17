@@ -1,0 +1,91 @@
+\documentclass{article}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\geometry{margin=1in}
+\begin{document}
+\title{Genetic Programming Classifier Report}
+\author{COS314 Project}
+\date{\today}
+\maketitle
+
+\begin{abstract}
+This report summarizes the implementation and comparison of two Genetic Programming classifiers on the Breast 
+Cancer Wisconsin dataset. One variant evolves arithmetic expressions, while the other evolves tree-based decision
+\end{abstract}
+
+\section{Introduction}
+Genetic Programming (GP) evolves classifiers by applying selection, crossover, and mutation to a 
+population of program trees. 
+This project implements two GP variants in Java and evaluates them on a 
+standard breast cancer dataset.
+
+\subsection{Experimental Setup}
+Each algorithm was executed for 30 independent runs using seeds given.
+The best-performing run was selected based on training fitness and saved. Saved in results directory. 
+The seed used for the demonstrated Decision Tree GP run was \texttt{0}, also the case for the demonstrated Arithmetic GP.
+
+\section{Methods}
+The two variants are:
+\begin{itemize}
+  \item arithmetic-expression GP, which evolves symbolic numerical formulas
+  \item decision-tree GP, which evolves logical tree-based classifiers
+\end{itemize}
+Both variants use the same dataset and evaluation metrics.
+Each variant is ran 30 times with the same inputted seeds.
+The program saves one result file per run under \texttt{results/}.
+
+\subsection{GP Parameters}
+\begin{center}
+    \begin{tabular}{lc}
+        \toprule
+        Parameter & Value \\
+        \midrule
+        Population Size & 200 \\
+        Maximum Generations & 100 \\
+        Crossover Rate & 0.8 \\
+        Mutation Rate & 0.2 \\
+        Maximum Depth & 5 \\
+        Tournament Size & 5 \\
+        Selection Method & Tournament Selection \\
+        Initialisation Method & Ramped Half-and-Half \\
+        Fitness Function & Training Accuracy \\
+        \bottomrule
+    \end{tabular}
+\end{center}
+
+\section{Results}
+The main comparison is based on accuracy, F-measure, and runtime.
+In the tested runs, the decision-tree GP achieved higher test F-measure, while the arithmetic GP reached a bit higher training accuracy.
+
+\begin{center}
+\begin{tabular}{lcccc}
+\toprule
+Algorithm & Training (\%) & Test (\%) & F-measure & Runtime (s) \\
+\midrule
+Decision Tree GP & 95.08 & 53.49 & 0.3750 & 0.49 \\
+Arithmetic GP & 95.08 & 50.00 & 0.3944 & 0.35 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+A two sample t-test on test accuracies found no statistically significant difference at 
+the 0.05 level for this experimental setup.
+
+\subsection{Program Output}
+During training, the program prints the best individual of each generation together with its training accuracy.
+
+\section{Discussion}
+The decision-tree variant appears to generalize better on the test split, while the arithmetic variant 
+fits the training set more closely.
+Further work should include cross-validation, parameter tuning and comparison with standard machine learning strategies.
+
+\section{Although}
+limitation observed during testing was occasional overfitting, where individuals achieved 
+high training accuracy but weaker test performance. 
+This was more noticeable in the arithmetic GP variant.
+
+\section{Conclusion}
+This project implements two GP classifiers and compares their performance on breast cancer classification.
+
+\end{document}
