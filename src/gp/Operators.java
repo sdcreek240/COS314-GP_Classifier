@@ -10,11 +10,11 @@ public class Operators {
     private final int numFeatures;
     private final TreeFactory factory;
 
-    public Operators(Random rng, int maxDepth, int numFeatures){
+    public Operators(Random rng, int maxDepth, int numFeatures, boolean isDecisionTree){
         this.rng = rng;
         this.maxDepth = maxDepth;
         this.numFeatures = numFeatures;
-        this.factory = new TreeFactory(numFeatures, rng);
+        this.factory = new TreeFactory(numFeatures, rng, isDecisionTree);
     }
 
     public Individual[] crossover(Individual a, Individual b){
@@ -56,47 +56,68 @@ public class Operators {
     }
 
     private int countNodes(Node n) {
-        if (n instanceof TerminalNode) {
-            return 1;
-            
+        if (n instanceof TerminalNode) return 1;
+        if (n instanceof FunctionNode) {
+            FunctionNode fn = (FunctionNode) n;
+            return 1 + countNodes(fn.getLeft()) + countNodes(fn.getRight());
         }
-        FunctionNode fn = (FunctionNode) n;
-        return 1 + countNodes(fn.getLeft()) + countNodes(fn.getRight());
+        if (n instanceof LogicalNode) {
+            LogicalNode ln = (LogicalNode) n;
+            int count = 1 + countNodes(ln.getLeft()) + countNodes(ln.getRight());
+            if (ln.getCondition() != null) count += countNodes(ln.getCondition());
+            return count;
+        }
+        return 1;
     }
 
     private Node getNode(Node n, int target, int[] current){
-        if (current[0] == target) {
-            return n;
-        }
+        if (current[0] == target) return n;
         current[0]++;
 
         if (n instanceof FunctionNode) {
             FunctionNode fn = (FunctionNode) n;
-            Node leftRes = getNode(fn.getLeft(),target,current);
-            if (leftRes != null) {
-                return leftRes;
-                
-            }
-            return getNode(fn.getRight(),target,current);
+            Node leftRes = getNode(fn.getLeft(), target, current);
+            if (leftRes != null) return leftRes;
+            return getNode(fn.getRight(), target, current);
         }
-
-            return null;  
+        
+        if (n instanceof LogicalNode) {
+            LogicalNode ln = (LogicalNode) n;
+            if (ln.getCondition() != null) {
+                Node condRes = getNode(ln.getCondition(), target, current);
+                if (condRes != null) return condRes;
+            }
+            Node leftRes = getNode(ln.getLeft(), target, current);
+            if (leftRes != null) return leftRes;
+            return getNode(ln.getRight(), target, current);
+        }
+        return null;  
     }
 
     private Node replaceNode(Node n, int target, int[] current, Node replacement){
         if (current[0] == target) {
             current[0]++;
             return replacement;
-            
         }
         current[0]++;
 
         if (n instanceof FunctionNode) {
             FunctionNode fn = (FunctionNode) n;
             Node newLeft = replaceNode(fn.getLeft(), target, current, replacement);
-            Node newRight = replaceNode(fn.getRight(), target, current,replacement);
-            return new FunctionNode(fn.getOp(),newLeft,newRight);
-
+            Node newRight = replaceNode(fn.getRight(), target, current, replacement);
+            return new FunctionNode(fn.getOp(), newLeft, newRight);
+        }
+        
+        if (n instanceof LogicalNode) {
+            LogicalNode ln = (LogicalNode) n;
+            Node newLeft = replaceNode(ln.getLeft(), target, current, replacement);
+            Node newRight = replaceNode(ln.getRight(), target, current, replacement);
+            
+            if (ln.getCondition() != null) {
+                Node newCond = replaceNode(ln.getCondition(), target, current, replacement);
+                return new LogicalNode(ln.getOp(), newCond, newLeft, newRight);
+            }
+            return new LogicalNode(ln.getOp(), newLeft, newRight);
         }
         return n.copy();
     }

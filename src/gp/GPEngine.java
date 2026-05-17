@@ -17,10 +17,11 @@ public class GPEngine {
     private final Operators operators;
     private final TreeFactory factory;
     private final Random rng;
+    private final boolean isDecisionTree;
 
     public GPEngine(int populationSize, int maxGenerations, double crossoverRate,
                     double mutationRate, int maxDepth, Dataset dataset, 
-                    int tournamentSize, int numFeatures, Random rng)
+                    int tournamentSize, int numFeatures, Random rng,boolean isDecisionTree)
     {
 
         this.populationSize = populationSize;
@@ -29,10 +30,11 @@ public class GPEngine {
         this.mutationRate = mutationRate;
         this.maxDepth = maxDepth;
         this.rng = rng;
+        this.isDecisionTree = isDecisionTree;
         this.evaluator = new FitnessEvaluator(dataset);
         this.selection = new Selection(rng, tournamentSize);
-        this.operators = new Operators(rng, maxDepth, numFeatures);
-        this.factory = new TreeFactory(numFeatures, rng);
+        this.operators = new Operators(rng, maxDepth, numFeatures, isDecisionTree);
+        this.factory = new TreeFactory(numFeatures, rng, isDecisionTree);
     }//END_constr
 
     public Individual run() {
