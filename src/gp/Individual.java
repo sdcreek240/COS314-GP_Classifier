@@ -12,5 +12,10 @@ public class Individual {
         this.fitness = 0.0;
     }//constr
 
-    public Individual copy() { return new Individual(tree.copy()); }
+    public Individual copy() {
+        Individual clone = new Individual(tree.copy());
+        clone.fitness = this.fitness;
+        return clone;
+        
+    }
 }//Individual
