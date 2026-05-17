@@ -2,10 +2,16 @@ import data.*;
 import gp.*;
 import evaluation.*;
 import java.util.*;
+import java.io.*;
+import java.nio.file.*;
 
 public class Main {
 
     public static void main(String[] args) throws Exception {
+
+        // parse command-line args for flags
+        boolean genPrint = false;
+        for (String a : args) if (a.equals("gPrint")) genPrint = true;
 
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter seed: ");
@@ -37,15 +43,36 @@ public class Main {
             long currentSeed = baseSeed  + i;
             System.out.println("\n-- Arithmetic Run " + (i + 1) + "/30 (Seed: " + currentSeed + ") ---");
             long start = System.currentTimeMillis();
-            GPEngine engine = new GPEngine(200, 100, 0.8, 0.2, 5, dataset, 5, dataset.numFeatures, new Random(currentSeed), false);
+            GPEngine engine = new GPEngine(200, 100, 0.8, 0.2, 5, dataset, 5, dataset.numFeatures, new Random(currentSeed), false, genPrint);
             Individual runBest = engine.run();
             long end = System.currentTimeMillis();
             totalTimeArith += (end - start);
             testAccuraciesArith[i] = Metrics.accuracy(runBest, dataset.test);
 
+            // ensure results directory exists
+            Path resDir = Paths.get("results/arithmetic");
+            Files.createDirectories(resDir);
+
+            double trainAccRun = Metrics.accuracy(runBest, dataset.train) * 100.0;
+            double testAccRun = Metrics.accuracy(runBest, dataset.test) * 100.0;
+            double fMeasureRun = Metrics.fMeasure(runBest, dataset.test);
+            long runtimeMs = end - start;
+
+            String outFile = String.format("results/arithmetic/run_%02d_seed_%d.txt", i+1, currentSeed);
+            try (PrintWriter pw = new PrintWriter(new FileWriter(outFile))) {
+                pw.printf("variant: arithmetic%n");
+                pw.printf("run: %d%n", i+1);
+                pw.printf("seed: %d%n", currentSeed);
+                pw.printf("train_acc: %.4f%%%n", trainAccRun);
+                pw.printf("test_acc: %.4f%%%n", testAccRun);
+                pw.printf("f_measure: %.6f%n", fMeasureRun);
+                pw.printf("fitness: %.6f%n", runBest.fitness);
+                pw.printf("runtime_ms: %d%n", runtimeMs);
+                pw.printf("tree: %s%n", runBest.tree);
+            }
+
             if (overallBestArith == null || runBest.fitness > overallBestArith.fitness) {
                 overallBestArith = runBest.copy();
-                
             }
         }
 
@@ -57,15 +84,35 @@ public class Main {
             long currentSeed = baseSeed + i;
             System.out.println("\n--- Decision Tree Run " + (i+1) + "/30 (Seed: " + currentSeed + ") ---");
             long start = System.currentTimeMillis();
-            GPEngine engine = new GPEngine(200, 100, 0.8, 0.2, 5, dataset, 5, dataset.numFeatures, new Random(currentSeed), true);
+            GPEngine engine = new GPEngine(200, 100, 0.8, 0.2, 5, dataset, 5, dataset.numFeatures, new Random(currentSeed), true, genPrint);
             Individual runBest = engine.run();
             long end = System.currentTimeMillis();
             totalTimeLogic += (end - start);
             testAccuraciesLogic[i] = Metrics.accuracy(runBest, dataset.test);
 
+            Path resDir = Paths.get("results/decision_tree");
+            Files.createDirectories(resDir);
+
+            double trainAccRun = Metrics.accuracy(runBest, dataset.train) * 100.0;
+            double testAccRun = Metrics.accuracy(runBest, dataset.test) * 100.0;
+            double fMeasureRun = Metrics.fMeasure(runBest, dataset.test);
+            long runtimeMs = end - start;
+
+            String outFile = String.format("results/decision_tree/run_%02d_seed_%d.txt", i+1, currentSeed);
+            try (PrintWriter pw = new PrintWriter(new FileWriter(outFile))) {
+                pw.printf("variant: decision_tree%n");
+                pw.printf("run: %d%n", i+1);
+                pw.printf("seed: %d%n", currentSeed);
+                pw.printf("train_acc: %.4f%%%n", trainAccRun);
+                pw.printf("test_acc: %.4f%%%n", testAccRun);
+                pw.printf("f_measure: %.6f%n", fMeasureRun);
+                pw.printf("fitness: %.6f%n", runBest.fitness);
+                pw.printf("runtime_ms: %d%n", runtimeMs);
+                pw.printf("tree: %s%n", runBest.tree);
+            }
+
             if (overallBestLogic == null || runBest.fitness > overallBestLogic.fitness) {
                 overallBestLogic = runBest.copy();
-                
             }
         }
 

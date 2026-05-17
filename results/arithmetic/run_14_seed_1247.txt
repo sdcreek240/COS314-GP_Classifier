@@ -1,0 +1,9 @@
+variant: arithmetic
+run: 14
+seed: 1247
+train_acc: 94.5355%
+test_acc: 59.3023%
+f_measure: 0.492754
+fitness: 0.945355
+runtime_ms: 403
+tree: (mul (div (add x5 (div 0.21609549461823474 0.21609549461823474)) (add (mul -0.14766442075515274 x6) (mul x4 x0))) (add (mul x4 -0.24418458598978043) (div (div x4 x3) (mul x4 x7))))

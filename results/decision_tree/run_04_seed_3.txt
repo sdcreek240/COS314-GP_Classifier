@@ -1,0 +1,9 @@
+variant: decision_tree
+run: 4
+seed: 3
+train_acc: 93.9891%
+test_acc: 48.8372%
+f_measure: 0.153846
+fitness: 0.939891
+runtime_ms: 674
+tree: (if (less_than (if (or x5 x0) (equal x5 x2) (if x0 0.28698285146301505 x4)) (less_than (greater_than 0.4714545954228446 0.9517174657392666) (or x4 x4))) (or (equal x4 (and 0.626545874927734 x0)) (if x0 x2 (greater_than x8 0.05268720176280062))) (less_than 0.7401694162858496 -0.4084908139321759))

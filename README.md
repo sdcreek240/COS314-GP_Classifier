@@ -2,28 +2,16 @@
 
 Genetic Programming classifiers for the Breast Cancer dataset.
 
-## Features
-- Arithmetic GP classifier
-- Decision tree GP classifier
-- Training + testing modes
-- Seeded runs for reproducibility
+## Run
+- `make`
+- `make run`
+- Enter a seed when prompted
 
-## How to Run
-
-Compile:
-make
-
-Run:
-make run
-
-You will be prompted for:
-- Seed value
+## Data
+- `data/Breast_train.csv`
+- `data/Breast_test.csv`
 
 ## Structure
-- src/        Java source files
-- data/       Dataset files
-- report/     Assignment report
-
-## Notes
-- Run multiple seeds for evaluation (30 runs required)
-- Best model is used for testing phase
+- `src/` Java source
+- `data/` datasets
+- `latex/` report source

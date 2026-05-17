@@ -2,6 +2,7 @@ package gp;
 
 import tree.*;
 import data.*;
+import evaluation.Metrics;
 import java.util.*;
 
 public class GPEngine {
@@ -18,10 +19,13 @@ public class GPEngine {
     private final TreeFactory factory;
     private final Random rng;
     private final boolean isDecisionTree;
+    private final Dataset dataset;
+    private final boolean genPrint;
 
     public GPEngine(int populationSize, int maxGenerations, double crossoverRate,
                     double mutationRate, int maxDepth, Dataset dataset, 
-                    int tournamentSize, int numFeatures, Random rng,boolean isDecisionTree)
+                    int tournamentSize, int numFeatures, Random rng, boolean isDecisionTree,
+                    boolean genPrint)
     {
 
         this.populationSize = populationSize;
@@ -32,6 +36,8 @@ public class GPEngine {
         this.rng = rng;
         this.isDecisionTree = isDecisionTree;
         this.evaluator = new FitnessEvaluator(dataset);
+        this.dataset = dataset;
+        this.genPrint = genPrint;
         this.selection = new Selection(rng, tournamentSize);
         this.operators = new Operators(rng, maxDepth, numFeatures, isDecisionTree);
         this.factory = new TreeFactory(numFeatures, rng, isDecisionTree);
@@ -55,7 +61,13 @@ public class GPEngine {
 
             for (Individual ind : pop) if (best==null || ind.fitness>best.fitness) best = ind.copy();
 
-            System.out.println("Gen " + gen + " | Best fitness: "+best.fitness+" | "+best.tree);
+            if (genPrint) {
+                double trainAcc = Metrics.accuracy(best, dataset.train) * 100.0;
+                double trainF = Metrics.fMeasure(best, dataset.train);
+                System.out.printf("Gen %d | Best fitness: %.6f | Train(%%): %.2f | F: %.4f\n", gen, best.fitness, trainAcc, trainF);
+            } else {
+                System.out.println("Gen " + gen + " | Best fitness: "+best.fitness+" | "+best.tree);
+            }
 
             //new pop
             List<Individual> next = new ArrayList<>();

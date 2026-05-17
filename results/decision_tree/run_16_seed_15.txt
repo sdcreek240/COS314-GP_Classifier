@@ -1,0 +1,9 @@
+variant: decision_tree
+run: 16
+seed: 15
+train_acc: 92.3497%
+test_acc: 52.3256%
+f_measure: 0.493827
+fitness: 0.923497
+runtime_ms: 386
+tree: (and (and x4 (if (if x1 0.4125077148865466 -0.878344268207325) x3 x4)) (or (and x7 0.14956411673392367) x0))
